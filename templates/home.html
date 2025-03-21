@@ -80,7 +80,11 @@
                         <img src="{% static 'images/default.jpg' %}" class="prof_pic" alt="Default Profile Pic">
                         {% endif %}
                         <div class="ms-3">
-                            <h6 class="mb-0">{{ tweet.user.profile.fullname }}</h6>
+                            <h6 class="mb-0">
+                              {% if tweet.user.profile.fullname %}
+                                 {{ tweet.user.profile.fullname }}
+                              {% endif %}
+                            </h6>
                             <small class="text-muted"> <a href="{% url 'prof' tweet.user.id %}" style="text-decoration: none;">@{{ tweet.user }}</a></small>
                         </div>
                         <div class="dropdown ms-auto">

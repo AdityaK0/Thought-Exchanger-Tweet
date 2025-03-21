@@ -57,47 +57,21 @@
 
 <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/intlTelInput.min.js"></script>
 <script>
-    // Initialize intl-tel-input
     var input = document.querySelector("#phone_number");
     var iti = window.intlTelInput(input, {
-        initialCountry: "auto",  // Automatically detects the user's country
-        preferredCountries: ['in', 'us'],  // Customize preferred countries list
+        initialCountry: "auto",  
+        preferredCountries: ['in', 'us'], 
         utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/utils.js"  // For formatting
     });
 
-    document.getElementById("send-otp").addEventListener("click", function () {
-        const phoneInput = document.getElementById("phone_number");
-        const fullPhoneNumber = iti.getNumber(); // Get the full phone number with the country code
-    
-        // Store the formatted phone number in the hidden input
+    // Update the hidden field with the full phone number when the user types or changes the phone number
+    input.addEventListener("input", function () {
+        const fullPhoneNumber = iti.getNumber();
         document.getElementById("full_phone_number").value = fullPhoneNumber;
-    
-        // Send the OTP via a fetch request
-        fetch("/send_otp/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}", // Include the CSRF token
-            },
-            body: JSON.stringify({ phone_number: fullPhoneNumber }),
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert("OTP sent successfully!");
-                } else {
-                    alert("Failed to send OTP: " + data.message);
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                alert("An error occurred while sending the OTP.");
-            });
     });
-    
 </script>
 
-{% endblock %} 
+{% endblock %}
 
 
 {% comment %} {% extends "base.html" %}
@@ -106,16 +80,17 @@
 {% block extra_styles %}
 {{ block.super }}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/css/intlTelInput.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 {% endblock %}
 {% block content %}
 <div class="login-container">
     <div class="login-header">
         <h1>Register</h1>
-        <p>Create Your Account to share ur thoughts</p>
+        <p>Create Your Account to share your thoughts</p>
     </div>
 
-
-    <form class="login-form" method="post">
+    <form class="login-form" method="post" >
         {% csrf_token %}
         
         <div class="form-group">
@@ -127,11 +102,13 @@
             <label for="username">Username</label>
             {{ form.username }}
         </div>
+        
         <div class="form-group">
-            <label for="username">Mobile Number</label>
-            <input name="phone_number" required >
+            <label for="phone_number">Phone Number (with country code):</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+            <input type="hidden" id="full_phone_number" name="full_phone_number">
         </div>
-
+        
         <div class="form-group">
             <label for="password1">Password</label>
             {{ form.password1 }}
@@ -148,9 +125,53 @@
     <hr>
 
     <div class="social-login">
-        <a  href="#" class="google-login">Continue with Google</a>
+        <a href="#" class="google-login">Continue with Google</a>
         <br>
-        <a   href="{% url 'signin' %}" class="google-login1">Already have an account? Login</a>
+        <a href="{% url 'signin' %}" class="google-login1">Already have an account? Login</a>
     </div>
 </div>
-{% endblock %} {% endcomment %}
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/intlTelInput.min.js"></script>
+<script>
+    var input = document.querySelector("#phone_number");
+    var iti = window.intlTelInput(input, {
+        initialCountry: "auto",  
+        preferredCountries: ['in', 'us'], 
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/utils.js"  // For formatting
+    });
+
+    document.getElementById("send-otp").addEventListener("click", function () {
+        const phoneInput = document.getElementById("phone_number");
+        const fullPhoneNumber = iti.getNumber();
+    
+        document.getElementById("full_phone_number").value = fullPhoneNumber;
+        document.getElementById("phone_number").addEventListener("onchange",(e)=>{
+            document.getElementById()+=e.target.value
+        })
+        // Send the OTP via a fetch request
+        /*fetch("/send_otp/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}",
+            },
+            body: JSON.stringify({ phone_number: fullPhoneNumber }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("OTP sent successfully!");
+                } else {
+                    alert("Failed to send OTP: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred while sending the OTP.");
+            }); */
+    });
+    
+</script>
+
+{% endblock %} 
+ {% endcomment %}
