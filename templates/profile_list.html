@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile List{% endblock %}
+{% block content %}
+<h1>Profile List</h1>
+<br>
+{% if profiles %}
+
+{% for pro in profiles %}
+<div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4" style="padding:10px;">
+        {% if pro.image %}
+        <img src="{{ pro.image.url }}" class="rounded-circle mr-4" alt="Profile Picture" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Pic">
+         {% else %}
+        <img src="{% static 'images/default.jpg' %}"  class="rounded-circle mr-4" style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Pic">
+        {% endif %}
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5 class="card-title">{{ pro.user.username }}</h5>
+          <p class="card-text"><a href="{% url 'prof' pro.user.id %}">@{{ pro.user.username|lower }}</a></p>
+          <p class="card-text"><small class="text-body-secondary">Last Updated : {{ pro.updated }}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+{% endfor %}
+
+
+{% endif %}
+
+{% endblock %}

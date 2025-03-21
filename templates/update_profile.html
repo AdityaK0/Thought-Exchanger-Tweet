@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Update profile{% endblock  %}
+{% block extra_styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/update_profile.css' %}" >
+
+{% endblock  %}
+
+{% block content %}
+<div class="profile-form-container">
+    <h2 class="form-title">Update Profile</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.image.id_for_label }}">Profile Image</label>
+            {{ form.image }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.fullname.id_for_label }}">Full Name</label>
+            {{ form.fullname }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.gender.id_for_label }}">Gender</label>
+            {{ form.gender }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+            {{ form.date_of_birth }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.bio.id_for_label }}">Bio</label>
+            {{ form.bio }}
+        </div>
+        <button type="submit" class="update-btn" value="update" name="update">
+            Update Profile
+        </button>
+    </form>
+</div>
+{% endblock %}

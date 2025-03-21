@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Tweet{% endblock %}
+{% block extra_styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/profile_pic.css' %}">
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+<link rel="stylesheet" href="{% static 'css/modal_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/right_panel.css' %}">
+<link rel="stylesheet" href="{% static 'css/comment.css' %}">
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<h3 style="
+    font-family:system-ui;
+    box-shadow:1px 1px 4px black;
+    padding:15px;
+    border-radius:10px;
+    display: inline-block;
+    
+">
+<i class="fa-solid fa-bookmark"></i> Saved Posts
+</h3>
+
+
+
+<div class="content-container" >
+    <!-- Tweets Section -->
+    <div class="tweets-section">
+        {% if tweets %}
+        {% for tweet in tweets %}
+        <div class="container"  >
+            <div class="card" style="max-width: 100%; margin-bottom: 1.5rem;">
+                <div class="card-body">
+                    <!-- Tweet Header -->
+                    <div class="d-flex align-items-center">
+                        {% if tweet.user.profile.image and tweet.user.profile.image.url %}
+                        <img src="{{ tweet.user.profile.image.url }}" class="prof_pic" alt="Profile Pic">
+                        {% else %}
+                        <img src="{% static 'images/default.jpg' %}" class="prof_pic" alt="Default Profile Pic">
+                        {% endif %}
+                        <div class="ms-3">
+                            <h6 class="mb-0">{{ tweet.user.username }}</h6>
+                            <small class="text-muted">@{{ tweet.user }}</small>
+                        </div>
+                        <!-- Three Dots Dropdown -->
+                        <div class="dropdown ms-auto">
+                            <i style="cursor:pointer;" class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                            <div class="dropdown-content">
+                                {% if tweet.id in list_of_all_saved_posts  %}
+                                <a href="{% url 'add_post' tweet.id %}"><i class="fa-solid fa-bookmark"></i></a>
+                                {% else %}
+                                <a href="{% url 'add_post' tweet.id %}"><i class="fa-regular fa-bookmark"></i></a>
+                                {% endif %}
+                                {% if request.user == tweet.user %}
+                                <a href="{% url 'delete_tweet' tweet.id %}"><i class="fa-solid fa-trash"></i></a>
+                                {% endif %}
+                                <a href="#view"><i class="fa-solid fa-share"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tweet Content -->
+                    <h5 class="card-title mt-3">{{ tweet.tweet_title }}</h5>
+                    {% if tweet.tweet_image %}
+                    <img src="{{ tweet.tweet_image.url }}" class="tweet-image" alt="Tweet Image">
+                    {% endif %}
+                    <p class="card-text mt-2">{{ tweet.body }}</p>
+                    <div style="display:flex;justify-content:space-between;" >
+                        <small class="text-muted">Posted on: {{ tweet.created_at }}</small>
+                        <small class="text-muted">Saved on: {{ tweet.saved_at }}</small>
+                    </div>
+
+
+                    <!-- Comment Section -->
+                    <div class="d-flex justify-content-between mt-3">
+                        <span>
+                            <i class="fas fa-comment-alt" onclick="toggleCommentCard(event)" style="cursor: pointer;" data-tweet-id="{{ tweet.id }}"></i>
+                            <div class="card comment-card" id="commentCard-{{ tweet.id }}" style="display: none; width: 100%; border-radius: 10px;">
+                                <div class="card-header" style="max-width: 100%; padding: 10px;">
+                                    <h5>Comments</h5>
+                                </div>
+
+                                <div class="card-body" style="width: 100%; padding: 20px;">
+                                    <form id="commentForm-{{ tweet.id }}" method="post" action="{% url 'add_comments' tweet.id %}" onsubmit="submitComment(event, {{ tweet.id }})">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <input type="textarea" class="form-control" name="description" placeholder="Add your comment" required style="width: 100%; margin-bottom: 15px;">
+                                        <button type="submit" class="btn btn-warning">Add comment</button>
+                                    </form>
+
+                                    <h5 id="commentCount-{{ tweet.id }}">{{ tweet.comment_count }} Comments</h5>
+
+                                    <!-- List of Existing Comments -->
+                                    <ul class="list-group" id="commentsList-{{ tweet.id }}" style="width: 100%; list-style: none; padding: 0;">
+                                        {% for comment in tweet.comments.all %}
+                                        <li class="list-group-item" style="width: 100%; border-bottom: 1px solid #ddd; padding: 10px;">
+                                            <a href="{% url 'prof' comment.user.id %}">@{{ comment.user.username }}</a>: {{ comment.description }}
+                                            <small class="text-muted d-block">Commented on: {{ comment.comment_time }}</small>
+                                        </li>
+                                        {% empty %}
+                                        <li class="list-group-item" style="width: 100%; padding: 10px;">No comments yet.</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </span>
+
+                        <!-- Like Button -->
+                        <span style="display:flex;gap:10px">
+                            <h5>{{ tweet.like_count }}</h5>
+                            <form method="post" action="{% url 'add_likes' tweet.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link p-0"><i class="fas fa-heart"></i></button>
+                            </form>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>Not any Post Saved yet...</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<script src="{% static 'js/menu.js' %}"></script>
+<script src="{% static 'js/popup.js' %}"></script>
+<script src="{% static 'js/cmt.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+{% block extra_styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/css/intlTelInput.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock %}
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <h1>Register</h1>
+        <p>Create Your Account to share your thoughts</p>
+    </div>
+
+    <form class="login-form" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            {{ form.username }}
+        </div>
+        
+        <div class="form-group">
+            <label for="phone_number">Phone Number (with country code):</label>
+            <input type="tel" id="phone_number" name="phone_number" placeholder="Enter phone number" required>
+            <input type="hidden" id="full_phone_number" name="full_phone_number">
+        </div>
+        
+        <div class="form-group">
+            <label for="password1">Password</label>
+            {{ form.password1 }}
+        </div>
+
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            {{ form.password2 }}
+        </div>
+
+        <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <hr>
+
+    <div class="social-login">
+        <a href="#" class="google-login">Continue with Google</a>
+        <br>
+        <a href="{% url 'signin' %}" class="google-login1">Already have an account? Login</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/intlTelInput.min.js"></script>
+<script>
+    // Initialize intl-tel-input
+    var input = document.querySelector("#phone_number");
+    var iti = window.intlTelInput(input, {
+        initialCountry: "auto",  // Automatically detects the user's country
+        preferredCountries: ['in', 'us'],  // Customize preferred countries list
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.8/build/js/utils.js"  // For formatting
+    });
+
+    document.getElementById("send-otp").addEventListener("click", function () {
+        const phoneInput = document.getElementById("phone_number");
+        const fullPhoneNumber = iti.getNumber(); // Get the full phone number with the country code
+    
+        // Store the formatted phone number in the hidden input
+        document.getElementById("full_phone_number").value = fullPhoneNumber;
+    
+        // Send the OTP via a fetch request
+        fetch("/send_otp/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}", // Include the CSRF token
+            },
+            body: JSON.stringify({ phone_number: fullPhoneNumber }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    alert("OTP sent successfully!");
+                } else {
+                    alert("Failed to send OTP: " + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("An error occurred while sending the OTP.");
+            });
+    });
+    
+</script>
+
+{% endblock %} 
+
+
+{% comment %} {% extends "base.html" %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+{% block extra_styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="login-container">
+    <div class="login-header">
+        <h1>Register</h1>
+        <p>Create Your Account to share ur thoughts</p>
+    </div>
+
+
+    <form class="login-form" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="username">Mobile Number</label>
+            <input name="phone_number" required >
+        </div>
+
+        <div class="form-group">
+            <label for="password1">Password</label>
+            {{ form.password1 }}
+        </div>
+
+        <div class="form-group">
+            <label for="password2">Confirm Password</label>
+            {{ form.password2 }}
+        </div>
+
+        <button type="submit" class="submit-btn">Register</button>
+    </form>
+
+    <hr>
+
+    <div class="social-login">
+        <a  href="#" class="google-login">Continue with Google</a>
+        <br>
+        <a   href="{% url 'signin' %}" class="google-login1">Already have an account? Login</a>
+    </div>
+</div>
+{% endblock %} {% endcomment %}

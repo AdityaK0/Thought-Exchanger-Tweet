@@ -1,0 +1,241 @@
+
+    /* Scoped styles for login container to prevent global conflicts */
+    .login-wrapper * {
+        box-sizing: border-box;
+    }
+
+    .login-wrapper {
+        font-family: inherit; /* Use existing font */
+        line-height: 1.6;
+    }
+
+    .login-container {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        width: 100%;
+        max-width: 450px;
+        padding: 40px;
+        transition: all 0.3s ease;
+        margin: 0 auto;
+    }
+
+    .login-container:hover {
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+        color: #3498db;
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .login-method-toggle {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 25px;
+        background-color: #f0f0f0;
+        border-radius: 30px;
+        overflow: hidden;
+    }
+
+    .login-method-toggle button {
+        flex: 1;
+        padding: 10px 20px;
+        border: none;
+        background-color: transparent;
+        color: #333;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .login-method-toggle button.active {
+        color: white;
+        background-color: #3498db;
+    }
+
+    .login-form, 
+    #otpLoginForm {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .button_style {
+        width: 100%;
+        padding: 12px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .button_style:hover {
+        background-color: #2980b9;
+    }
+
+    .button_style:disabled {
+        background-color: #bdc3c7;
+        cursor: not-allowed;
+    }
+
+    .login-extras {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    .login-extras a {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+    }
+
+    .social-login {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .social-button_style {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: white;
+        color: #333;
+        font-weight: 600;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .social-button_style img {
+        width: 24px;
+        margin-right: 10px;
+    }
+
+    .social-button_style:hover {
+        background-color: #f0f0f0;
+    }
+
+    #otpLoginForm {
+        display: none;
+    }
+
+    .otp-section {
+        display: flex;
+        gap: 10px;
+    }
+
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px);
+        padding: 20px;
+        background-color: #f4f4f4;
+    }
+
+    /* General form group styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Button styling */
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #28a745; /* Green */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #218838; /* Darker green */
+}
+/* Style for the social login link */
+.social-login a {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #4285f4; /* Google blue */
+    color: #fff;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.social-login a:hover {
+    background-color: #357ae8; /* Darker Google blue */
+}
+
+/* Style for the "Already have an account? Login" link */
+.google-login1 {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #28a745; /* Green color for contrast */
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.google-login1:hover {
+    color: #218838; /* Darker green */
+}

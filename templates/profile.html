@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock  %}
+{% block extra_styles %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/profile_pic.css' %}">
+<link rel="stylesheet" href="{% static 'css/menu.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/modal_form.css' %}">
+<link rel="stylesheet" href="{% static 'css/comment.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'css/right_panel.css' %}"> {% endcomment %}
+
+{% comment %} <link rel="stylesheet" href="{% static 'css/tweet.css' %}"> {% endcomment %}
+{% endblock  %}
+{% block content %}
+{% if profile %}
+<div class="container mt-5">
+    <!-- Profile Header Section -->
+    <div class="profile-container">
+      <div class="profile-header">
+          <div class="profile-image-section">
+            {% if profile.image and profile.image.url %}
+                <img src="{{ profile.image.url }}" alt="Profile Picture" class="profile-image">
+            {% else %}
+                <img src="{% static 'images/default.jpg' %}" alt="Default Profile Picture" class="profile-image">
+            {% endif %}
+        
+          </div>
+          
+          <div class="profile-info">
+              <div class="profile-info-header">
+                  <div class="profile-name">
+                      <h1>{{ profile.user.username }}</h1>
+                      <p>{{ profile.fullname|default_if_none:"" }}</p>
+                  </div>
+                  {% if request.user == profile.user %}
+                      <a class="btn btn-outline-success" href="{% url 'update_profile' request.user.username %}">
+                          Update Profile &nbsp;<i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                  {% endif %}
+              </div>
+              
+              <p class="profile-bio">{{ profile.bio|default_if_none:"" }}</p>
+              
+              <div class="profile-stats">
+                  <div class="stat-item" onclick="showPopup('following')">
+                      <p class="stat-number">{{ profile.follows.all.count }}</p>
+                      <p class="stat-label">Following</p>
+                  </div>
+                  <div class="stat-item" onclick="showPopup('followers')">
+                      <p class="stat-number">{{ profile.followed_by.all.count }}</p>
+                      <p class="stat-label">Followers</p>
+                  </div>
+                  <div class="stat-item">
+                      <p class="stat-number">{{ profile.user.tweets.all.count }}</p>
+                      <p class="stat-label">Posts</p>
+                  </div>
+              </div>
+  
+              {% if profile.user != request.user %}
+              <div class="follow-button-container">
+                  <form method="post" action="{% url 'follow_unfollow' profile.user.id %}">
+                      {% csrf_token %}
+                      {% if profile in user.profile.follows.all %}
+                          <button class="follow-button unfollow" name="follow" value="unfollow" type="submit">
+                              Unfollow @{{ profile.user.username|lower }}
+                          </button>
+                      {% else %}
+                          <button class="follow-button follow" name="follow" value="follow" type="submit">
+                              Follow @{{ profile.user.username|lower }}
+                          </button>
+                      {% endif %}
+                  </form>
+              </div>
+              {% endif %}
+          </div>
+      </div>
+  </div>
+  
+  
+
+  <div id="following-popup" class="popup-overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title">Following</h2>
+            <button class="close-popup" onclick="hidePopup('following')">&times;</button>
+        </div>
+        <ul class="user-list">
+            {% for following in profile.follows.all %}
+            <li class="user-item">
+                {% if following.image %}
+                    <img src="{{ following.image.url }}" alt="{{ following }}" class="user-avatar">
+                {% else %}
+                    <img src="{% static 'images/default.jpg' %}" alt="{{ following }}" class="user-avatar">
+                {% endif %}
+                <div class="user-info">
+                    <a href="{% url 'prof' following.user.id %}" class="user-name">{{ following.user.username }}</a>
+                    <p class="user-handle">@{{ following }}</p>
+                </div>
+                {% if user.is_authenticated and following.user != user %}
+                <form method="post" action="{% url 'follow_unfollow' following.user.id %}" style="margin: 0;">
+                    {% csrf_token %}
+                    {% if following in user.profile.follows.all %}
+                        <button class="user-follow-btn following" name="follow" value="unfollow">Following</button>
+                    {% else %}
+                        <button class="user-follow-btn" name="follow" value="follow">Follow</button>
+                    {% endif %}
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<!-- Followers Popup -->
+<div id="followers-popup" class="popup-overlay">
+    <div class="popup">
+        <div class="popup-header">
+            <h2 class="popup-title">Followers</h2>
+            <button class="close-popup" onclick="hidePopup('followers')">&times;</button>
+        </div>
+        <ul class="user-list">
+            {% for follower in profile.followed_by.all %}
+            <li class="user-item">
+                {% if follower.image %}
+                    <img src="{{ follower.image.url }}" alt="{{ follower }}" class="user-avatar">
+                {% else %}
+                    <img src="{% static 'images/default.jpg' %}" alt="{{ follower }}" class="user-avatar">
+                {% endif %}
+                <div class="user-info">
+                    <a href="{% url 'prof' follower.user.id %}" class="user-name">{{ follower.user.username }}</a>
+                    <p class="user-handle">@{{ follower }}</p>
+                </div>
+                {% if user.is_authenticated and follower.user != user %}
+                <form method="post" action="{% url 'follow_unfollow' follower.user.id %}" style="margin: 0;">
+                    {% csrf_token %}
+                    {% if follower in user.profile.follows.all %}
+                        <button class="user-follow-btn following" name="follow" value="unfollow">Following</button>
+                    {% else %}
+                        <button class="user-follow-btn" name="follow" value="follow">Follow</button>
+                    {% endif %}
+                </form>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
+    {% comment %} </div> {% endcomment %}
+
+            <!-- Tweets/Posts Section -->
+            <div class="tweets-section" >
+                {% if tweets %}
+                {% for tweet in tweets %}
+                <div class="container">
+                    <div class="card" style="max-width: 80%; margin-bottom: 1.5rem;">
+                        <div class="card-body">
+                            <!-- Tweet Header -->
+                            <div class="d-flex align-items-center">
+                                {% if tweet.user.profile.image and tweet.user.profile.image.url %}
+                                <img src="{{ tweet.user.profile.image.url }}" class="prof_pic" alt="Profile Pic">
+                                {% else %}
+                                <img src="{% static 'images/default.jpg' %}" class="prof_pic" alt="Default Profile Pic">
+                                {% endif %}
+                                <div class="ms-3">
+                                    <h6 class="mb-0">{{ tweet.user.username }}</h6>
+                                    <small class="text-muted">@{{ tweet.user }}</small>
+                                </div>
+                                <!-- Three Dots Dropdown -->
+                                <div class="dropdown ms-auto">
+                                    <i style="cursor:pointer;" class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                                    <div class="dropdown-content">
+                                        <a href="{% url 'add_post' tweet.id %}"><i class="fa-regular fa-bookmark"></i></a>
+                                        {% if request.user == tweet.user %}
+                                        <a href="{% url 'delete_tweet' tweet.id %}"><i class="fa-solid fa-trash"></i></a>
+                                        {% endif %}
+                                        <a href="#view"><i class="fa-solid fa-share"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tweet Content -->
+                            <h5 class="card-title mt-3">{{ tweet.tweet_title }}</h5>
+                            {% if tweet.tweet_image %}
+                            <img src="{{ tweet.tweet_image.url }}" class="tweet-image" alt="Tweet Image">
+                            {% endif %}
+                            <p class="card-text mt-2">{{ tweet.body }}</p>
+                            <small class="text-muted">Posted on: {{ tweet.created_at }}</small>
+        
+                            <!-- Comment Section -->
+                            <div class="d-flex justify-content-between mt-3">
+                                <span>
+                                    <i class="fas fa-comment-alt" onclick="toggleCommentCard(event)" style="cursor: pointer;" data-tweet-id="{{ tweet.id }}"></i>
+                                    <div class="card comment-card" id="commentCard-{{ tweet.id }}" style="display: none; width: 100%; border-radius: 10px;">
+                                        <div class="card-header" style="max-width: 100%; padding: 10px;">
+                                            <h5>Comments</h5>
+                                        </div>
+        
+                                        <div class="card-body" style="width: 100%; padding: 20px;">
+                                            <form id="commentForm-{{ tweet.id }}" method="post" action="{% url 'add_comments' tweet.id %}" onsubmit="submitComment(event, {{ tweet.id }})">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="{{ request.path }}">
+                                                <input type="textarea" class="form-control" name="description" placeholder="Add your comment" required style="width: 100%; margin-bottom: 15px;">
+                                                <button type="submit" class="btn btn-warning">Add comment</button>
+                                            </form>
+        
+                                            <h5 id="commentCount-{{ tweet.id }}">{{ tweet.comment_count }} Comments</h5>
+        
+                                            <!-- List of Existing Comments -->
+                                            <ul class="list-group" id="commentsList-{{ tweet.id }}" style="width: 100%; list-style: none; padding: 0;">
+                                                {% for comment in tweet.comments.all %}
+                                                <li class="list-group-item" style="width: 100%; border-bottom: 1px solid #ddd; padding: 10px;">
+                                                    <a href="{% url 'prof' comment.user.id %}">@{{ comment.user.username }}</a>: {{ comment.description }}
+                                                    <small class="text-muted d-block">Commented on: {{ comment.comment_time }}</small>
+                                                </li>
+                                                {% empty %}
+                                                <li class="list-group-item" style="width: 100%; padding: 10px;">No comments yet.</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </span>
+        
+                                <!-- Like Button -->
+                                <span style="display:flex;gap:10px">
+                                    <h5>{{ tweet.like_count }}</h5>
+                                    <form method="post" action="{% url 'add_likes' tweet.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-link p-0"><i class="fas fa-heart"></i></button>
+                                    </form>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No tweets available.</p>
+                {% endif %}
+            </div>
+        <!-- Sidebar (Followings and Followers) -->
+
+            <!-- Follow/Unfollow Button -->
+
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endif %}
+<script src="{% static 'js/cmt.js' %}" ></script>
+<script src="{% static 'js/menu.js' %}"></script>
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

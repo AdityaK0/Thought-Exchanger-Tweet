@@ -1,0 +1,89 @@
+/* .comment-card {
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.comment-card .card-header {
+    padding: 15px;
+    background-color: #f8f9fa; 
+}
+
+.comment-card .card-body {
+    width: 100%;
+    padding: 20px;
+}
+
+.comment-card .form-control {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.comment-card .list-group-item {
+    width: 100%;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    background-color: #fff; 
+}
+
+.comment-card .btn {
+    padding: 0;
+}
+
+.comment-card h5 {
+    margin-bottom: 10px;
+} */
+
+.tweet-image {
+    width: 100%;
+    max-height: 400px; /* Limit the image height */
+    object-fit: cover; /* Ensures the image covers the area without stretching */
+    border-radius: 8px; /* Add rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow for a 3D effect */
+    transition: transform 0.3s ease;
+}
+
+/* Default image placeholder (when no image is uploaded) */
+.tweet-image-placeholder {
+    width: 100%;
+    height: 200px;
+    background-color: #f0f0f0; /* Light gray background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #aaa; /* Light text color */
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Optional: Display image with hover effect */
+.tweet-image:hover {
+    transform: scale(1.05); /* Slight zoom effect on hover */
+    /* transition: transform 0.3s ease; */
+ 
+}
+
+
+.text-container {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  /* Styling for "Let's" */
+.lets {
+    font-family: 'Pacifico', cursive; /* Friendly, script font */
+    color: #1DA1F2; /* Twitter's blue color */
+    font-size: 1.5em; /* Slightly bigger to emphasize */
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Styling for "Tweet" */
+.tweet {
+    font-family: 'Roboto', sans-serif; /* Clean, sans-serif font */
+    color: #14171A; /* Dark gray/black for contrast */
+    font-size: 1.5em;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  }
