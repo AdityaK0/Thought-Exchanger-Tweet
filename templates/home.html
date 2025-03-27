@@ -20,6 +20,7 @@
     color: white;
     border-radius: 4px;
     transition: background-color 0.3s, color 0.3s;
+    margin: 1rem;
   }
   
   
@@ -58,10 +59,11 @@
   <div class="text-container">
     <span class="lets">Let's</span> <span class="tweet">Tweet let the people know about yout thoughts</span>
   </div>
-    {% if user.is_authenticated %}
-    <button class="btx" onclick="openModal()"> Create Tweet</button>
-    {% endif %}
+
 </div>
+{% if user.is_authenticated %}
+<button class="btx" onclick="openModal()"> Create Tweet</button>
+{% endif %}
 
 <div class="content-container">
     <div class="tweets-section">

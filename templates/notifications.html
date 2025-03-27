@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Notifications{% endblock  %}
+{% block extra_styles %}
+{{ block.super }}
+<style>
+.notification-container {
+    max-width:90%;
+    min-width:90%;
+    /* margin: 50px auto; */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'system-ui';
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+    color: #333;
+}
+
+h4 {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+}
+
+.notification-list {
+    margin-top: 20px;
+}
+
+.notification-item {
+    padding: 14px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+    border-left: 4px solid #007bff;
+    border-radius: 5px;
+    transition: 0.3s ease-in-out;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.notification-item:hover {
+    background-color: #f1f7ff;
+}
+
+.notification-item p {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.no-notification {
+    text-align: center;
+    color: #777;
+    font-size: 16px;
+    padding: 10px;
+}
+.markbtn{
+    border:none;
+    border-radius: 5px;
+    background-color: rgb(84, 212, 84);
+    padding: 5px 10px;
+    text-decoration: none;
+    color: white;
+    margin-top: 1rem;
+}
+</style>
+{% endblock  %}
+{% block content %}
+{% if notifications %}
+<div class="notification-container">
+    <h1>Hey Aditya, you have some notifications</h1>
+    <h4>Total Notifications: {{ notifications|length }}</h4>
+    
+    <div class="notification-list">
+        {% for notification in notifications %}
+            <div class="notification-item">
+                {% if notification.notify_type == "follow" %}
+                <p><strong> <a href="{% url 'prof' notification.notify_by.user.id %}">@{{ notification.notify_by }} </a>  [{{ notification.notify_by.fullname }}]</strong> started <strong>following </strong>  you</p>
+                {% else %}
+                <p><strong> <a href="{% url 'prof' notification.notify_by.user.id %}">@{{ notification.notify_by }} </a>  [{{ notification.notify_by.fullname }}]</strong> {{ notification.notify_type }}d on your tweet  <strong>{{ notification.notify_tweet }} </strong> at {{ notification.notify_time }} </p>
+                 
+                {% endif %}
+                <a href="{% url 'mark_as_read_notification' notification.id %}" > <button class="markbtn">Mark as Read </button> </a> 
+                
+            </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div>
+    <p class="no-notification">No notifications yet.</p>
+</div>
+{% endif %}
+
+
+{% endblock %}

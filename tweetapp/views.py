@@ -70,11 +70,17 @@ def follow_unfollow(request,id):
                 current_user_profile.follows.remove(profile_follow_unfollow)
             else:
                 current_user_profile.follows.add(profile_follow_unfollow) 
+                Notification.objects.create(
+                        notify_by=current_user_profile,  
+                        notified_user=profile_follow_unfollow,  
+                        notify_type="follow"
+                    )
+                
             current_user_profile.save()  
             return profile(request,id)
         return render(request,'profile.html')
 
-# @login_required    
+# @login_required(login_url='/login/')     
 def add_tweet(request):
     if request.user.is_authenticated:
         logged_user = request.user
@@ -134,9 +140,19 @@ def add_likes(request,id):
     tweet = get_object_or_404(Tweet,id=id)
     if tweet:
         like, created = TweetLikes.objects.get_or_create(user=request.user, tweet=tweet)
-        print(f"Like created: {created}, Total Likes: {tweet.like_count()}")  
+        print(f"Like created: {created}, Total Likes: {tweet.like_count()}") 
+        # print(Notification.objects.all().values())
+        if created:
+            Notification.objects.create(
+                notify_by=request.user.profile,
+                notified_user=tweet.user.profile,
+                notify_tweet=tweet,
+                notify_type="like"
+            )
+
         if not created:
             like.delete()  
+
 
         next_url = request.POST.get('next',None)
         print(f"Tweet: {tweet}, User: {request.user}")
@@ -154,6 +170,14 @@ def add_comments(request,id):
         if request.method == "POST":
             description = request.POST.get('description')
             TweetComment.objects.create(user=request.user,tweet=tweet,description = description) 
+            Notification.objects.create(
+                notify_by=request.user.profile,
+                notified_user=tweet.user.profile,
+                notify_tweet=tweet,
+                notify_type="comment"
+            )   
+
+            print("Commented >>>")
             messages.success(request,"Comment added successfully !!!")
             # referer = request.META.get('HTTP_REFERER', 'home')
             next = request.POST.get('next','home')
@@ -227,7 +251,7 @@ def search_user(request):
             return render(request,"notexists.html")
     return JsonResponse({'success': False, 'message': 'Invalid request'}, status=400)  
 
-@login_required
+@login_required(login_url='/login/') 
 def suggest_users(request):
     query = request.GET.get('username', '')
     if len(query)>0:
@@ -280,7 +304,7 @@ def update_profile(request, username):
 
     return render(request, 'update_profile.html', {'form': form})
 
-@login_required
+@login_required(login_url='/login/') 
 def add_Save_Post(request,id):
     tweet = get_object_or_404(Tweet,id=id)
     next_route_URL = request.META.get("HTTP_REFERER")
@@ -332,3 +356,16 @@ def saved_posts(request):
 
 
 
+@login_required(login_url='/login/') 
+def user_notifications(request):
+    notifications = Notification.objects.filter(notified_user=request.user.profile,is_read=False).order_by('-notify_time')
+    return render(request, "notifications.html", {"notifications": notifications})
+
+
+@login_required(login_url='/login/')
+def mark_as_read_notification(request,id):
+    notification = Notification.objects.get(id=id)
+    notification.is_read = True
+    notification.save()
+
+    return redirect('notification_list') 

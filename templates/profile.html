@@ -14,7 +14,7 @@
 {% endblock  %}
 {% block content %}
 {% if profile %}
-<div class="container mt-5">
+<div class="mt-5">
     <!-- Profile Header Section -->
     <div class="profile-container">
       <div class="profile-header">
@@ -153,10 +153,11 @@
 
             <!-- Tweets/Posts Section -->
             <div class="tweets-section" >
+                <h1 style="text-align: center;margin: 1rem;">Your Posts</h1>
                 {% if tweets %}
                 {% for tweet in tweets %}
                 <div class="container">
-                    <div class="card" style="max-width: 80%; margin-bottom: 1.5rem;">
+                    <div class="card" style="max-width: 100%; margin-bottom: 1.5rem;">
                         <div class="card-body">
                             <!-- Tweet Header -->
                             <div class="d-flex align-items-center">
@@ -200,7 +201,7 @@
                                         </div>
         
                                         <div class="card-body" style="width: 100%; padding: 20px;">
-                                            <form id="commentForm-{{ tweet.id }}" method="post" action="{% url 'add_comments' tweet.id %}" onsubmit="submitComment(event, {{ tweet.id }})">
+                                            <form id="commentForm-{{ tweet.id }}" method="post" action="{% url 'add_comments' tweet.id %}">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="next" value="{{ request.path }}">
                                                 <input type="textarea" class="form-control" name="description" placeholder="Add your comment" required style="width: 100%; margin-bottom: 15px;">

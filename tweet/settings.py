@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SESSION_COOKIE_AGE = 1800
+SESSION_COOKIE_AGE = 84600
 
 # Application definition
 
@@ -77,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'tweetapp.context_processors.notification_count',
             ],
         },
     },
@@ -148,6 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = '/login/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -158,3 +160,4 @@ EMAIL_HOST_USER = 'aditya.techseria@gmail.com'
 EMAIL_HOST_PASSWORD = 'ulxl qave jfyr fpzd'
 
 # twillo_setup
+

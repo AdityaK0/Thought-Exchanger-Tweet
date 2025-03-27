@@ -87,3 +87,19 @@ class SavedPosts(models.Model):
     tweet = models.ForeignKey(Tweet,on_delete=models.CASCADE)
     saved_at = models.DateTimeField(auto_now_add=True)
 
+class Notification(models.Model):
+    NOTIFY_TYPES = (
+        ('like', 'Like'),
+        ('comment', 'Comment'),
+        ('follow', 'Follow'),
+    )
+
+    notify_by = models.ForeignKey("Profile", on_delete=models.CASCADE)
+    notify_time = models.DateTimeField(auto_now_add=True)
+    notify_tweet = models.ForeignKey("Tweet", on_delete=models.CASCADE,null=True)
+    notify_type = models.CharField(max_length=10, choices=NOTIFY_TYPES)
+    is_read = models.BooleanField(default=False) 
+    notified_user = models.ForeignKey("Profile", on_delete=models.CASCADE, related_name="received_notifications") 
+
+    def __str__(self):
+        return f"{self.notify_by} {self.notify_type}d on your tweet {self.notify_tweet} at {self.notify_time}"
