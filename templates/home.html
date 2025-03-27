@@ -174,12 +174,12 @@
                 <div class="panel-item">
                     <i class="fas fa-user"></i>
                     <span>People you follow</span>
-                    <span class="count">24</span>
+                    <span class="count"> <a href="{% url 'prof' user.id %}">{{ user.profile.follows.all|length }}</a> </span>
                 </div>
-                <div class="panel-item">
+                <!-- <div class="panel-item">
                     <i class="fas fa-star"></i>
                     <span>Suggested users</span>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -188,11 +188,11 @@
                 <i class="fas fa-bookmark"></i> Saved Posts
             </div>
             <div class="panel-content">
-                <div class="panel-item">
+                <!-- <div class="panel-item">
                     <i class="fas fa-clock"></i>
                     <span>Recent saves</span>
                     <span class="count">5</span>
-                </div>
+                </div> -->
                 <div class="panel-item">
                   <a href="{% url 'saved_posts' %}" style="text-decoration:none;color:black;">
                     <i class="fas fa-list"></i>
@@ -204,21 +204,32 @@
             </div>
         </div>
 
-        <!-- <div class="panel-section">
-            <div class="panel-header">
-                <i class="fas fa-bell"></i> Notifications
+        <div class="panel-section">
+            <div class="panel-header" >
+              <a href="{% url 'notification_list' %}" style="text-decoration: none;"><i class="fas fa-bell"></i> Notifications</a>
+                
             </div>
             <div class="panel-content">
+              
+              <p>Watch Out the Latest Notifications</p>
+              {% if notifications %}
+              {% for notification in notifications %}
                 <div class="notification unread">
-                    <strong>@username</strong> liked your post
-                    <small>2m ago</small>
+                  {% if notification.notify_type == "like" %}
+                    <p> Someone {{ notification.notify_type }}d  your post</p>
+                  {% elif notification.notify_type == "comment"  %} 
+                  <p> Someone {{ notification.notify_type }}ed on your post</p> 
+                  {% else %} 
+                  <p> Someone {{ notification.notify_type }}ed  you</p> 
+                  {% endif %}
+                  
                 </div>
-                <div class="notification">
-                    <strong>@another_user</strong> commented on your post
-                    <small>1h ago</small>
-                </div>
+              {% endfor %}
+              {% else %}
+              <p>No notifications available right now</p>
+              {% endif %}
             </div>
-        </div> -->
+        </div>
     </div>
 </div>
 {% endif %}
