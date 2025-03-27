@@ -8,7 +8,8 @@ Thought Exchanger Tweet is a Django-based web application designed for users to 
 - Secure user authentication (Login, Logout, Register, Forgot Password)
 - Create, edit, and delete tweets
 - Like and unlike tweets
-- Notifications when someone comment and like on your tweet
+- Notifications when someone comment or like on your tweet
+- Notification when someone follows you 
 - Comment on tweets
 - Save and unsave tweets
 - Follow and unfollow users
@@ -89,6 +90,8 @@ tweet/
 - `/delete_tweet/<int:pk>/` - Delete a tweet
 - `/add_likes/<int:id>/` - Like/unlike a tweet
 - `/add_comments/<int:id>/` - Add a comment to a tweet
+-  `/notification_list/` - List of all notifications
+-  `/mark_as_read/<int:id>/` - Marks as Read Notification
 - `/signin/` - User login
 - `/register/` - User registration
 - `/logout/` - User logout
