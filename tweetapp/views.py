@@ -68,6 +68,11 @@ def follow_unfollow(request,id):
             action = request.POST.get('follow',None)
             if action=="unfollow":
                 current_user_profile.follows.remove(profile_follow_unfollow)
+                Notification.objects.create(
+                    notify_by=current_user_profile,  
+                    notified_user=profile_follow_unfollow,  
+                    notify_type="unfollow"
+                )
             else:
                 current_user_profile.follows.add(profile_follow_unfollow) 
                 Notification.objects.create(

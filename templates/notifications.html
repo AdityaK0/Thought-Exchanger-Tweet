@@ -71,7 +71,8 @@ h4 {
 {% block content %}
 {% if notifications %}
 <div class="notification-container">
-    <h1>Hey Aditya, you have some notifications</h1>
+    <h1>Hey {% if request.user.profile.fullname %} {{ request.user.profile.fullname }} {% else %} {{ request.user }} {% endif %}, 
+        you have some notifications</h1>
     <h4>Total Notifications: {{ notifications|length }}</h4>
     
     <div class="notification-list">
@@ -79,6 +80,8 @@ h4 {
             <div class="notification-item">
                 {% if notification.notify_type == "follow" %}
                 <p><strong> <a href="{% url 'prof' notification.notify_by.user.id %}">@{{ notification.notify_by }} </a>  [{{ notification.notify_by.fullname }}]</strong> started <strong>following </strong>  you</p>
+                {% elif notification.notify_type == "unfollow" %}
+                <p><strong> <a href="{% url 'prof' notification.notify_by.user.id %}">@{{ notification.notify_by }} </a>  [{{ notification.notify_by.fullname }}]</strong> <strong>unfollowed </strong>  you</p>
                 {% else %}
                 <p><strong> <a href="{% url 'prof' notification.notify_by.user.id %}">@{{ notification.notify_by }} </a>  [{{ notification.notify_by.fullname }}]</strong> {{ notification.notify_type }}d on your tweet  <strong>{{ notification.notify_tweet }} </strong> at {{ notification.notify_time }} </p>
                  

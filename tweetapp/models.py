@@ -92,6 +92,7 @@ class Notification(models.Model):
         ('like', 'Like'),
         ('comment', 'Comment'),
         ('follow', 'Follow'),
+        ('unfollow','UnFollow')
     )
 
     notify_by = models.ForeignKey("Profile", on_delete=models.CASCADE)
