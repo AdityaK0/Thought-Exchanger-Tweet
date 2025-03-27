@@ -2,6 +2,20 @@
 
 Thought Exchanger Tweet is a Django-based web application designed for users to share, search, and engage with tweets in an interactive and user-friendly environment. Built using the Model-View-Template (MVT) architecture, it includes robust authentication and social features.
 
+
+## Features
+
+- Secure user authentication (Login, Logout, Register, Forgot Password)
+- Create, edit, and delete tweets
+- Like and unlike tweets
+- Notifications when someone comment and like on your tweet
+- Comment on tweets
+- Save and unsave tweets
+- Follow and unfollow users
+- Search for tweets and users
+- Upload profile and tweet images
+- Admin panel for content moderation
+
 ## Project Structure
 
 ```
@@ -63,17 +77,7 @@ tweet/
 6. **Access the app**
    Open `http://127.0.0.1:8000/` in your browser.
 
-## Features
 
-- Secure user authentication (Login, Logout, Register, Forgot Password)
-- Create, edit, and delete tweets
-- Like and unlike tweets
-- Comment on tweets
-- Save and unsave tweets
-- Follow and unfollow users
-- Search for tweets and users
-- Upload profile and tweet images
-- Admin panel for content moderation
 
 ## API Endpoints & Routes
 
